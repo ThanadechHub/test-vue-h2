@@ -1,6 +1,6 @@
 <template>
 <div>
-     <v-container style="height: 500%; margin-right:15%" >
+     <v-container style="height: 500%; margin:auto;" >
           <v-card class="bg" style="width:1000%; margin:auto; background-color:#FFFFFF">
             <v-layout text-center wrap>
               <v-flex mb-4>
@@ -22,16 +22,18 @@
                                   color="warning"
                                   small
                                   dark
+                                  @click="editPet(item.id)"
                                 >
-                                  <v-icon @click="editPet(item.id)">mdi-pencil</v-icon>
+                                  <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
                                 &nbsp;
                                 <v-btn
                                   color="error"
                                   small
                                   dark
+                                  @click="deletePet(item.id)"
                                 >
-                                  <v-icon @click="deletePet(item.id)">mdi-delete</v-icon>
+                                  <v-icon>mdi-delete</v-icon>
                                 </v-btn>
                       </template>
                     </v-data-table>
@@ -83,16 +85,47 @@ export default {
                 });
       },
 
+      // deletePet(id){
+      //       PetService.delete(id)
+      //         .then((response) => {
+      //           console.log(response.data);
+      //           location.reload(); 
+      //         })
+      //         .catch((e) => {
+      //           console.log(e);
+      //         });    
+      // },
       deletePet(id){
-            PetService.delete(id)
-              .then((response) => {
-                console.log(response.data);
-                location.reload(); 
-              })
-              .catch((e) => {
-                console.log(e);
-              });    
-      },
+            this.$swal({
+                      title: 'Are you sure?',
+                      text: "You won't be able to revert this!",
+                      icon: 'warning',
+                      showCancelButton: true,
+                      confirmButtonColor: '#3085d6',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                      if(result.value) {
+                          PetService.delete(id)
+                            .then((response) => {
+                              console.log(response.data);
+                                      this.$swal(
+                                        'Deleted!',
+                                        'Your file has been deleted.',
+                                        'success'
+                                      ).then(function() {
+                                          location.reload();
+                                          });
+                            })
+                            .catch((e) => {
+                              console.log(e);
+                            }); 
+                      } else {
+                        this.$swal('Cancelled', 'Your file is still intact', 'info')
+                      }
+                    })
+                        
+                  },
 
       editPet(id){
         document.location.href = 'http://localhost:8080/editPet/'+id;

@@ -1,6 +1,6 @@
 <template>
     <div>
-            <v-dialog
+            <!-- <v-dialog
               v-model="dialog"
               max-width="290">
               <v-card>
@@ -16,7 +16,7 @@
                   </v-btn>
                 </v-card-actions>
               </v-card>
-            </v-dialog>
+            </v-dialog> -->
 
         <v-card
             class="mx-auto"
@@ -131,9 +131,13 @@
                   .then(response => {
                     console.log(response);
                     if(response.data != null){
-                          const options1 = { title: "ประกาศ!", size: "sm" };
-                          this.$dialogs.alert("บันทึกข้อมูลสำเร็จ", options1);     
-                          location.reload();          
+                          // const options1 = { title: "ประกาศ!", size: "sm" };
+                          // this.$dialogs.alert("บันทึกข้อมูลสำเร็จ", options1);
+                          this.$swal("บันทึกสำเร็จ","success!","success").then(function() {
+                                          location.reload();
+                                          window.location.href = '/showPet';
+                                          });
+                          // location.reload();          
                     }
                   })
                   .catch(e => {

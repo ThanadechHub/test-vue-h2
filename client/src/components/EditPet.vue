@@ -120,14 +120,39 @@ import PetService from "../PetService";
                   });
       },
       updatePet() {
-              PetService.update(this.currentPet.id, this.currentPet)
-                .then(response => {
-                  console.log(response.data);
-                  this.message = 'The pet was updated successfully!';
-                })
-        .catch(e => {
-          console.log(e);
-        });
+        //       PetService.update(this.currentPet.id, this.currentPet)
+        //         .then(response => {
+        //           console.log(response.data);
+        //           this.message = 'The pet was updated successfully!';
+        //         })
+        // .catch(e => {
+        //   console.log(e);
+        // });
+                      this.$swal({
+                title: 'Do you want to save the changes?',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Save',
+                denyButtonText: `Don't save`,
+              }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                          PetService.update(this.currentPet.id, this.currentPet)
+                            .then((response) => {
+                              console.log(response.data);
+                                this.$swal('Saved!', '', 'success')
+                                .then(function() {
+                                          location.reload();
+                                          window.location.href = '/showPet';
+                                      });
+                            })
+                            .catch((e) => {
+                              console.log(e);
+                            });
+                } else if (result.isDenied) {
+                  this.$swal.fire('Changes are not saved', '', 'info')
+                }
+              })
       },
    },
   mounted() {
